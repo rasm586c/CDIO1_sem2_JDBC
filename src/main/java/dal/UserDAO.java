@@ -121,7 +121,7 @@ public class UserDAO implements IUserDAO, AutoCloseable {
         }
     }
 
-    private UserDTO getUser(ResultSet userDAOres, ResultSet userRoleres) {
+    private UserDTO getUser(ResultSet userDAOres, ResultSet userRoleres) throws DALException {
         /* [userDAOres]
             userName TEXT,
             ini TEXT,

@@ -3,9 +3,9 @@ package GUI;
 import dal.IUserDAO;
 import dal.UserDAO;
 import dto.UserDTO;
+import utils.ConnectionString;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -15,8 +15,10 @@ public class TUI {
     private Scanner input;
 
     public TUI() throws SQLException {
+        ConnectionString connectionData = new ConnectionString("secure.config");
+
         input = new Scanner(System.in);
-        dao = new UserDAO("ec2-52-30-211-3.eu-west-1.compute.amazonaws.com", "**DELETED**", "**DELTED**");
+        dao = new UserDAO("ec2-52-30-211-3.eu-west-1.compute.amazonaws.com", connectionData.getUsername(), connectionData.getPassword());
     }
 
     public boolean showMenu() {
@@ -50,29 +52,29 @@ public class TUI {
     private void createUser() {
         UserDTO user = new UserDTO();
 
-        System.out.println("Skriv username: ");
-        user.setUserName(input.nextLine());
-
-        System.out.println("Skriv password: ");
-        user.setPassword(input.nextLine());
-
-        System.out.println("Skriv initialer (ini): ");
-        user.setIni(input.nextLine());
-
-        System.out.println("Skriv cpr: ");
-        user.setCpr(input.nextLine());
-
-        System.out.println("Skriv roller (mellemrum sepererer rolle)");
-        String[] roles = input.nextLine().split(" ");
-
-        for (String role : roles) {
-            user.addRole(role);
-        }
-
         try {
+            System.out.println("Skriv username: ");
+            user.setUserName(input.nextLine());
+
+            System.out.println("Skriv password: ");
+            user.setPassword(input.nextLine());
+
+            System.out.println("Skriv initialer (ini): ");
+            user.setIni(input.nextLine());
+
+            System.out.println("Skriv cpr: ");
+            user.setCpr(input.nextLine());
+
+            System.out.println("Skriv roller (mellemrum sepererer rolle)");
+            String[] roles = input.nextLine().split(" ");
+
+            for (String role : roles) {
+                user.addRole(role);
+            }
+
             dao.createUser(user);
         } catch (IUserDAO.DALException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     private void listUsers() {
